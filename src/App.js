@@ -3,7 +3,6 @@ import "./App.css";
 import Nav from "./view/Nav";
 import { useState, useEffect } from "react";
 import Todo from "./view/todo";
-import axios from "axios";
 import FreeApi from "./view/FreeApi";
 function App() {
 
