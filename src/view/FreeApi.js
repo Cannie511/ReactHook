@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import useFetch from "../customize/fetch";
 const FreeApi = () => {
-  const [dataUni, setDataUni] = useState([]);
+  // const [dataUni, setDataUni] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [isErr, setIsErr] = useState(false);
+  const {
+    data: dataUni,
+    loading,
+    isErr,
+  } = useFetch("http://universities.hipolabs.com/search?country=Viet+Nam");
   //component did mount
-  useEffect(async () => {
-    let res = await axios.get(
-      "http://universities.hipolabs.com/search?country=Viet+Nam"
-    );
-    let data = res && res.data ? res.data : [];
-    setDataUni(data);
-    console.log("check uni data: ", res);
-  }, []);
+  //
   return (
     <>
       <table>
@@ -24,7 +24,9 @@ const FreeApi = () => {
           </tr>
         </thead>
         <tbody>
-          {dataUni &&
+          {isErr === false &&
+            loading === false &&
+            dataUni &&
             dataUni.length > 0 &&
             dataUni.map((item, index) => {
               return (
@@ -32,12 +34,28 @@ const FreeApi = () => {
                   <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>
-                    <a href={item.web_pages} target="_blank">{item.web_pages}</a>
+                    <a href={item.web_pages} rel="noreferrer" target="_blank">
+                      {item.web_pages}
+                    </a>
                   </td>
                   <td>{item.country}</td>
                 </tr>
               );
             })}
+          {loading === true && (
+            <tr>
+              <td colSpan={4} style={{ textAlign: "center" }}>
+                Loading...
+              </td>
+            </tr>
+          )}
+          {isErr === true && (
+            <tr>
+              <td colSpan={4} style={{ textAlign: "center" }}>
+                Something wrong...
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </>
